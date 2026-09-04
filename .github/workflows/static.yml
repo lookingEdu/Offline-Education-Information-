@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>대면출석수업 안내 — 유비온</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0D1B3E; --blue:#1A6FFF; --blue-lt:#EBF4FF; --blue-dk:#0050CC;
+  --ink:#1A1A2E; --ink2:#5A6070; --line:#E4E8F0; --bg:#F6F8FC; --white:#FFFFFF;
+  --amber:#E07B00;
+}
+*{box-sizing:border-box;margin:0;padding:0;word-break:keep-all;overflow-wrap:break-word;}
+html,body{background:var(--bg);color:var(--ink);font-family:'Nanum Gothic',sans-serif;font-size:16px;-webkit-font-smoothing:antialiased;}
+body{padding-bottom:20px;}
+.wrap{max-width:460px;margin:0 auto;min-height:100vh;}
+.page{display:none;}.page.active{display:block;}
+
+/* 홈 상단바 */
+.home-bar{background:var(--navy);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
+.home-bar-title{font-size:13px;font-weight:700;color:rgba(255,255,255,.6);}
+.home-bar-badge{background:var(--blue);color:#fff;font-size:12px;font-weight:800;padding:4px 10px;border-radius:20px;}
+
+/* 홈 히어로 */
+.home-hero{background:var(--navy);padding:24px 20px 28px;color:#fff;}
+.home-hero h1{font-size:24px;font-weight:800;line-height:1.4;margin-bottom:8px;}
+.home-hero h1 span{color:#4A9EFF;}
+.home-hero p{font-size:14px;color:rgba(255,255,255,.6);}
+
+/* 홈 메뉴 카드 */
+.menu-wrap{padding:16px;display:flex;flex-direction:column;gap:10px;}
+.menu-card{background:var(--white);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;border:1.5px solid var(--line);-webkit-tap-highlight-color:transparent;width:100%;text-align:left;font-family:'Nanum Gothic',sans-serif;transition:border-color .12s,background .12s;}
+.menu-card:active{border-color:var(--blue);background:var(--blue-lt);}
+.menu-card.featured{border-color:var(--blue);background:var(--blue-lt);}
+.menu-badge{width:48px;height:48px;border-radius:14px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.menu-card.featured .menu-badge{background:var(--blue);}
+.menu-info{flex:1;}
+.menu-name{font-size:17px;font-weight:800;color:var(--ink);display:block;margin-bottom:3px;}
+.menu-card.featured .menu-name{color:var(--blue-dk);}
+.menu-desc{font-size:13px;color:var(--ink2);}
+.menu-chevron{font-size:22px;color:var(--line);font-weight:400;flex-shrink:0;}
+.menu-card.featured .menu-chevron{color:var(--blue);}
+
+/* 서브 상단바 */
+.sub-bar{background:var(--navy);padding:0 16px;display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:100;}
+.sub-bar::-webkit-scrollbar{display:none;}
+.sub-back{background:none;border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nanum Gothic',sans-serif;padding:16px 12px 16px 4px;white-space:nowrap;flex-shrink:0;}
+.sub-divider{color:rgba(255,255,255,.3);flex-shrink:0;font-size:18px;}
+.sub-nav{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;color:rgba(255,255,255,.8);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nanum Gothic',sans-serif;padding:6px 12px;white-space:nowrap;flex-shrink:0;margin:8px 2px;}
+.sub-nav:active{background:rgba(255,255,255,.25);color:#fff;}
+
+/* 서브 히어로 */
+.sub-hero{background:var(--navy);padding:20px 20px 24px;color:#fff;}
+.sub-hero .eyebrow{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;}
+.sub-hero h2{font-size:22px;font-weight:800;line-height:1.35;}
+.sub-hero p{font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;}
+
+/* 콘텐츠 */
+.content{padding:16px;display:flex;flex-direction:column;gap:12px;}
+
+/* 정보 카드 */
+.info-card{background:var(--white);border:1px solid var(--line);border-radius:16px;overflow:hidden;}
+.info-row{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;}
+.info-row+.info-row{border-top:1px solid var(--line);}
+.row-icon{width:38px;height:38px;border-radius:10px;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.row-title{font-size:15px;font-weight:800;display:block;margin-bottom:4px;}
+.row-body{font-size:14px;color:var(--ink2);line-height:1.7;}
+.row-body strong{color:var(--ink);font-weight:800;}
+.row-body .bullet{display:block;padding-left:12px;position:relative;}
+.row-body .bullet::before{content:"•";position:absolute;left:0;color:var(--blue);}
+.path-details summary{font-size:15px;font-weight:800;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.path-details summary::-webkit-details-marker{display:none;}
+.path-arrow{font-size:12px;color:var(--ink2);transition:transform .2s;}
+.path-details[open] .path-arrow{transform:rotate(180deg);}
+.path-details .path-box{margin-top:8px;}
+.path-box{background:var(--bg);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink2);line-height:1.9;margin-top:8px;}
+.pnum{color:var(--blue-dk);font-weight:800;}
+
+/* 경고 카드 */
+.warn-card{background:#FFF8ED;border:1.5px solid #FFB300;border-radius:14px;padding:16px 18px;font-size:14px;color:#6B4000;line-height:1.7;}
+.warn-card strong{font-weight:800;color:#C75000;}
+.danger-card{background:#FFF0F0;border:1.5px solid #FF6B6B;border-radius:14px;padding:16px 18px;font-size:14px;color:#6B0000;line-height:1.7;}
+.danger-card strong{font-weight:800;}
+
+/* 수업주차 표 */
+.week-table{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+.week-table table{width:100%;border-collapse:collapse;}
+.week-table thead tr{background:var(--navy);}
+.week-table thead th{color:#fff;font-size:13px;font-weight:700;padding:11px 14px;text-align:left;}
+.week-table tbody tr+tr{border-top:1px solid var(--line);}
+.week-table tbody tr:nth-child(even){background:var(--bg);}
+.week-table td{padding:12px 14px;font-size:14px;}
+.week-table .wk{color:var(--blue-dk);font-weight:800;}
+.week-note{font-size:12px;color:var(--ink2);background:var(--bg);padding:11px 14px;border-top:1px solid var(--line);}
+
+/* FAQ */
+.faq-search-wrap{background:var(--white);border-bottom:1px solid var(--line);padding:12px 16px 8px;}
+.faq-search-box{display:flex;align-items:center;gap:10px;background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;transition:border-color .15s;}
+.faq-search-box:focus-within{border-color:var(--blue);}
+.faq-search-box input{flex:1;border:none;background:transparent;font-size:15px;color:var(--ink);font-family:'Nanum Gothic',sans-serif;outline:none;}
+.faq-search-box input::placeholder{color:var(--ink2);}
+.faq-search-clear{background:none;border:none;color:var(--ink2);font-size:14px;cursor:pointer;padding:0;}
+.faq-empty{font-size:13px;color:var(--ink2);text-align:center;padding:10px 0 4px;}
+.faq-chips{display:flex;flex-wrap:wrap;gap:7px;padding:12px 16px;background:var(--white);border-bottom:1px solid var(--line);}
+.chip{background:var(--bg);border:1.5px solid var(--line);color:var(--ink2);font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;font-family:'Nanum Gothic',sans-serif;}
+.chip.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+.faq-list{padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
+.faq-item{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+.faq-item.hidden{display:none;}
+details.faq-item summary{list-style:none;}
+details.faq-item summary::-webkit-details-marker{display:none;}
+.faq-q{display:flex;align-items:flex-start;gap:10px;padding:15px 16px;cursor:pointer;}
+.q-badge{background:var(--blue-lt);color:var(--blue-dk);font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;flex-shrink:0;margin-top:2px;white-space:nowrap;}
+.q-text{font-size:15px;font-weight:700;flex:1;line-height:1.5;}
+.q-arrow{font-size:12px;color:var(--ink2);flex-shrink:0;margin-top:4px;transition:transform .2s;}
+details.faq-item[open] .q-arrow{transform:rotate(180deg);}
+.faq-a{padding:13px 16px 16px;font-size:14px;color:var(--ink2);line-height:1.75;border-top:1px solid var(--line);}
+.em{font-weight:800;color:#C00;background:#FFF3B0;border-radius:3px;padding:0 3px;}
+.highlight{background:#FFF3B0;border-radius:2px;}
+
+/* 교육장 */
+.venue-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.venue-btn{background:var(--white);border:1.5px solid var(--line);border-radius:14px;padding:16px 14px;display:flex;flex-direction:column;gap:6px;cursor:pointer;text-align:left;font-family:'Nanum Gothic',sans-serif;transition:border-color .12s;width:100%;}
+.venue-btn:active{border-color:var(--blue);background:var(--blue-lt);}
+.region-pill{background:var(--navy);color:#fff;font-size:12px;font-weight:800;padding:3px 10px;border-radius:6px;display:inline-block;}
+.venue-nm{font-size:13px;font-weight:700;color:var(--ink);line-height:1.4;}
+.venue-card{background:var(--white);border:1.5px solid var(--line);border-radius:16px;margin-bottom:10px;overflow:hidden;}
+.venue-card.my-venue{border-color:var(--blue);}
+.venue-card-head{display:flex;align-items:center;gap:10px;padding:16px 18px;cursor:pointer;}
+.venue-card-head .vname{font-size:15px;font-weight:700;flex:1;}
+.my-label{background:var(--blue-lt);color:var(--blue-dk);font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;}
+.venue-card-body{display:none;padding:0 18px 18px;font-size:14px;color:var(--ink2);line-height:1.75;border-top:1px solid var(--line);padding-top:14px;}
+.venue-card.open .venue-card-body{display:block;}
+.venue-card-arrow{font-size:13px;color:var(--ink2);transition:transform .2s;flex-shrink:0;}
+.venue-card.open .venue-card-arrow{transform:rotate(180deg);}
+.map-btns{display:flex;gap:8px;margin-top:12px;}
+.map-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--navy);color:#fff;text-decoration:none;font-size:13px;font-weight:700;padding:12px;border-radius:10px;}
+.map-btn.kakao{background:#FAE100;color:#3A1D1D;}
+.change-btn{width:100%;background:none;border:1.5px solid var(--line);border-radius:12px;padding:14px;font-size:14px;font-weight:700;color:var(--ink2);cursor:pointer;font-family:'Nanum Gothic',sans-serif;margin-top:4px;}
+.venue-notice{background:#FFF8ED;border:1px solid #FFD54F;border-radius:12px;padding:12px 14px;font-size:13px;color:#6B4000;line-height:1.65;}
+.venue-picker{display:flex;flex-direction:column;gap:12px;}
+
+/* 문의 */
+.contact-warn{background:#FFF8ED;border:1px solid #FFD54F;border-radius:12px;padding:14px 16px;font-size:14px;color:#6B4000;line-height:1.75;}
+.contact-warn strong{font-weight:800;}
+.contact-card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 18px;}
+.contact-card .c-label{font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:5px;}
+.contact-card .c-value{font-size:15px;font-weight:800;}
+.contact-card .c-sub{font-size:13px;color:var(--ink2);margin-top:2px;}
+.contact-row{display:flex;align-items:center;gap:14px;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 18px;text-decoration:none;color:var(--ink);}
+.contact-row:active{background:var(--blue-lt);}
+.c-icon{font-size:20px;flex-shrink:0;}
+.c-text{flex:1;font-size:15px;font-weight:700;}
+.c-arr{font-size:18px;color:var(--line);font-weight:800;}
+.email-section{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 18px;}
+.email-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.email-addr{font-size:13px;font-weight:700;color:var(--ink2);}
+.email-copy-btn{background:var(--blue-lt);border:1px solid var(--blue);color:var(--blue-dk);font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;cursor:pointer;font-family:'Nanum Gothic',sans-serif;}
+.email-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.email-btn{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:13px 8px;text-decoration:none;font-size:13px;font-weight:700;color:var(--ink);}
+.email-logo{width:30px;height:30px;border-radius:8px;background:#03C75A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;font-family:'Arial',sans-serif;}
+.email-logo.g{background:#EA4335;}.email-logo.d{background:#FF5A37;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- 홈 -->
+<div class="page active" id="page-home">
+  <div class="home-bar">
+    <span class="home-bar-title">보육교사 2급과정 대면출석수업 안내</span>
+    <span class="home-bar-badge">UBION</span>
+  </div>
+  <div class="home-hero">
+    <h1>어떤 내용이<br><span>궁금하세요?</span></h1>
+    <p>아래 5개 항목에서 확인하세요 ↓</p>
+  </div>
+  <div class="menu-wrap">
+    <button class="menu-card featured" onclick="goPage('page-venue')">
+      <div class="menu-badge">📍</div>
+      <div class="menu-info"><span class="menu-name">교육장</span><span class="menu-desc">주소·지도 바로 확인</span></div>
+      <span class="menu-chevron">›</span>
+    </button>
+    <button class="menu-card" onclick="goPage('page-schedule')">
+      <div class="menu-badge">📌</div>
+      <div class="menu-info"><span class="menu-name">수업 전 필독</span><span class="menu-desc">일정·시간·주의사항</span></div>
+      <span class="menu-chevron">›</span>
+    </button>
+    <button class="menu-card" onclick="goPage('page-exam')">
+      <div class="menu-badge">📝</div>
+      <div class="menu-info"><span class="menu-name">출석시험 안내</span><span class="menu-desc">O/X 10문제 · 배점 10%</span></div>
+      <span class="menu-chevron">›</span>
+    </button>
+    <button class="menu-card" onclick="goPage('page-faq')">
+      <div class="menu-badge">💬</div>
+      <div class="menu-info"><span class="menu-name">자주 묻는 질문</span><span class="menu-desc">궁금한 점 바로 찾기</span></div>
+      <span class="menu-chevron">›</span>
+    </button>
+    <button class="menu-card" onclick="goPage('page-contact')">
+      <div class="menu-badge">📞</div>
+      <div class="menu-info"><span class="menu-name">문의하기</span><span class="menu-desc">전화·카카오·이메일</span></div>
+      <span class="menu-chevron">›</span>
+    </button>
+  </div>
+</div>
+
+<!-- 교육장 -->
+<div class="page" id="page-venue">
+  <div class="sub-bar">
+    <button class="sub-back" onclick="goHome()">← 처음으로</button>
+    <span class="sub-divider">|</span>
+    <button class="sub-nav" onclick="goPage('page-schedule')">수업 전 필독</button>
+    <button class="sub-nav" onclick="goPage('page-exam')">출석시험</button>
+    <button class="sub-nav" onclick="goPage('page-faq')">자주 묻는 질문</button>
+    <button class="sub-nav" onclick="goPage('page-contact')">문의</button>
+  </div>
+  <div class="sub-hero">
+    <div class="eyebrow">26년 9월 17일 개강반</div>
+    <h2>교육장 안내</h2>
+    <p>신청한 교육장을 선택해서 장소를 확인하세요</p>
+  </div>
+  <div class="content">
+    <div class="venue-picker" id="venue-picker">
+      <div class="venue-grid">
+        <button class="venue-btn" data-venue="구로" onclick="selectVenue('구로')"><span class="region-pill">구로</span><span class="venue-nm">본사 지하 세미나실</span></button>
+        <button class="venue-btn" data-venue="강북" onclick="selectVenue('강북')"><span class="region-pill">강북</span><span class="venue-nm">정화예술대학교</span></button>
+        <button class="venue-btn" data-venue="인천" onclick="selectVenue('인천')"><span class="region-pill">인천</span><span class="venue-nm">건설기술교육원</span></button>
+        <button class="venue-btn" data-venue="수원" onclick="selectVenue('수원')"><span class="region-pill">수원</span><span class="venue-nm">수원뷰티실용전문학교</span></button>
+        <button class="venue-btn" data-venue="대전" onclick="selectVenue('대전')"><span class="region-pill">대전</span><span class="venue-nm">대전우송정보대학교</span></button>
+        <button class="venue-btn" data-venue="광주" onclick="selectVenue('광주')"><span class="region-pill">광주</span><span class="venue-nm">한국예술종합교육원</span></button>
+        <button class="venue-btn" data-venue="대구" onclick="selectVenue('대구')"><span class="region-pill">대구</span><span class="venue-nm">계명문화대학교</span></button>
+        <button class="venue-btn" data-venue="부산" onclick="selectVenue('부산')"><span class="region-pill">부산</span><span class="venue-nm">화신사이버대학교</span></button>
+      </div>
+    </div>
+    <div id="venue-detail" style="display:none;flex-direction:column;gap:12px;">
+      <div class="venue-notice">강의실은 사정에 따라 변경될 수 있습니다. 변경 시 별도 공지됩니다.</div>
+      <div class="venue-card my-venue" id="my-venue-card"></div>
+      <button class="change-btn" onclick="resetVenue()">⟳ 교육장 다시 선택하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 수업 전 필독 -->
+<div class="page" id="page-schedule">
+  <div class="sub-bar">
+    <button class="sub-back" onclick="goHome()">← 처음으로</button>
+    <span class="sub-divider">|</span>
+    <button class="sub-nav" onclick="goPage('page-venue')">교육장</button>
+    <button class="sub-nav" onclick="goPage('page-exam')">출석시험</button>
+    <button class="sub-nav" onclick="goPage('page-faq')">자주 묻는 질문</button>
+    <button class="sub-nav" onclick="goPage('page-contact')">문의</button>
+  </div>
+  <div class="sub-hero">
+    <div class="eyebrow">📌 수업 전 필독</div>
+    <h2>수업 전 꼭 확인하세요!</h2>
+    <p>놓치면 미이수가 될 수 있어요</p>
+  </div>
+  <div class="content">
+    <div class="info-card">
+      <div class="info-row">
+        <div class="row-icon">🕘</div>
+        <div><span class="row-title">수업시간</span><span class="row-body">오전 9시 ~ 오후 6시 (8교시)</span></div>
+      </div>
+      <div class="info-row">
+        <div class="row-icon">🚪</div>
+        <div><span class="row-title">입실 가능 시간</span><span class="row-body">오전 8시 30분 이후부터 가능</span></div>
+      </div>
+      <div class="info-row">
+        <div class="row-icon">🍱</div>
+        <div><span class="row-title">쉬는시간·점심시간</span><span class="row-body">당일 담당 교수님 공지 (수업마다 상이)</span></div>
+      </div>
+      <div class="info-row">
+        <div class="row-icon">📋</div>
+        <div style="flex:1;">
+          <details class="path-details">
+            <summary>내 일정·교육장 확인 <span class="path-arrow">▾</span></summary>
+            <div class="path-box">
+              <span class="pnum">①</span> 홈페이지 › 나의 강의실 › 대면/실습<br>&emsp;› 대면수업 학습현황 › 해당과목 <strong>"보기"</strong><br><br>
+              <span class="pnum">②</span> 나의 강의실 › 강의실 › 수강중인 과목<br>&emsp;› 해당과목 <strong>"입장하기"</strong> › 온라인강의창 상단
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+    <div class="danger-card">⛔ <strong>지각·결석·외출·중도퇴실 → 미출석·미이수 처리</strong></div>
+    <div class="warn-card">🔒 <strong>일정·교육장은 개강 후 절대 변경 불가</strong> (교육부 보고)<br>💻 온라인강의는 당일 반드시 <strong>로그아웃</strong> 후 참석하세요</div>
+    <div class="week-table">
+      <table>
+        <thead><tr><th>과목명</th><th>수업주차</th></tr></thead>
+        <tbody>
+          <tr><td>보육교사론</td><td class="wk">3, 6, 8주차</td></tr>
+          <tr><td>아동과학지도</td><td class="wk">6, 8, 9주차</td></tr>
+          <tr><td>아동안전관리</td><td class="wk">2, 13, 14주차</td></tr>
+          <tr><td>언어지도</td><td class="wk">8, 12, 13주차</td></tr>
+          <tr><td>놀이지도</td><td class="wk">11, 12, 13주차</td></tr>
+          <tr><td>아동미술</td><td class="wk">6, 8, 13주차</td></tr>
+          <tr><td>아동권리와복지</td><td class="wk">4, 5, 6주차</td></tr>
+          <tr><td>아동관찰및행동연구</td><td class="wk">5, 6, 8주차</td></tr>
+        </tbody>
+      </table>
+      <div class="week-note">📎 교안은 해당 과목 첨부파일에서 PDF로. 한글파일 미제공.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 출석시험 -->
+<div class="page" id="page-exam">
+  <div class="sub-bar">
+    <button class="sub-back" onclick="goHome()">← 처음으로</button>
+    <span class="sub-divider">|</span>
+    <button class="sub-nav" onclick="goPage('page-venue')">교육장</button>
+    <button class="sub-nav" onclick="goPage('page-schedule')">수업 전 필독</button>
+    <button class="sub-nav" onclick="goPage('page-faq')">자주 묻는 질문</button>
+    <button class="sub-nav" onclick="goPage('page-contact')">문의</button>
+  </div>
+  <div class="sub-hero">
+    <div class="eyebrow">📝 출석시험 안내</div>
+    <h2>출석시험 — O/X 10문제 필수</h2>
+    <p>응시만 하면 이수 인정</p>
+  </div>
+  <div class="content">
+    <div class="info-card">
+      <div class="info-row"><div class="row-icon">💯</div><div><span class="row-title">출석시험 배점</span><span class="row-body">전체 성적의 10%<br><span style="font-size:13px;">(온라인 강의창 상단에서 확인 가능)</span></span></div></div>
+      <div class="info-row"><div class="row-icon">⏱️</div><div><span class="row-title">시험 시간</span><span class="row-body">8교시 수업이 모두 끝난 직후 진행</span></div></div>
+      <div class="info-row"><div class="row-icon">📋</div><div><span class="row-title">문제 유형</span><span class="row-body">O/X 10문제<br>기존 교안 범위에서만 출제</span></div></div>
+      <div class="info-row"><div class="row-icon">🚫</div><div><span class="row-title">오픈북 금지</span><span class="row-body">교안·노트·태블릿·노트북 등 일체 참고 불가<br>시험 전 가방에 보관</span></div></div>
+      <div class="info-row"><div class="row-icon">✅</div><div><span class="row-title">이수 기준</span><span class="row-body"><span class="bullet">점수와 무관하게 <strong>응시만 하면 이수</strong> 인정</span><span class="bullet">출제 경향·문제 정보는 사전 안내 없음</span></span></div></div>
+      <div class="info-row"><div class="row-icon">📖</div><div><span class="row-title">시험 난이도</span><span class="row-body">수업 내용을 충실히 들으셨다면<br><strong>충분히 풀 수 있는 수준</strong>입니다<br>시험 내용 개별 안내 불가</span></div></div>
+      <div class="info-row"><div class="row-icon">📅</div><div><span class="row-title">출결 확정 처리</span><span class="row-body">교육일 다음 주 정상영업일(보통 월요일)<br>다소 시간 소요될 수 있음</span></div></div>
+      <div class="info-row"><div class="row-icon">📊</div><div><span class="row-title">결과 확인</span><span class="row-body">최종 성적공개일에 확인<br>당일 개별 점수 안내 없음</span></div></div>
+    </div>
+    <div class="danger-card">⚠️ <strong>미응시 시 해당 과목 미이수 처리</strong></div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="page" id="page-faq">
+  <div class="sub-bar">
+    <button class="sub-back" onclick="goHome()">← 처음으로</button>
+    <span class="sub-divider">|</span>
+    <button class="sub-nav" onclick="goPage('page-venue')">교육장</button>
+    <button class="sub-nav" onclick="goPage('page-schedule')">수업 전 필독</button>
+    <button class="sub-nav" onclick="goPage('page-exam')">출석시험</button>
+    <button class="sub-nav" onclick="goPage('page-contact')">문의</button>
+  </div>
+  <div class="sub-hero">
+    <div class="eyebrow">💬 자주 묻는 질문</div>
+    <h2>FAQ</h2>
+    <p>카테고리로 빠르게 찾아보세요</p>
+  </div>
+  <div class="faq-search-wrap">
+    <div class="faq-search-box">
+      <span style="font-size:16px;">🔍</span>
+      <input type="text" id="faqSearchInput" placeholder="궁금한 내용을 입력하세요" oninput="filterFaq(this.value)">
+      <button class="faq-search-clear" id="faqClearBtn" onclick="clearFaq()" style="display:none;">✕</button>
+    </div>
+    <div class="faq-empty" id="faqEmpty" style="display:none;">일치하는 질문이 없어요.</div>
+  </div>
+  <div class="faq-chips" id="faqChips">
+    <button class="chip active" data-cat="all">전체</button>
+    <button class="chip" data-cat="attend">출석기준</button>
+    <button class="chip" data-cat="schedule">일정변경</button>
+    <button class="chip" data-cat="online">온라인강의</button>
+    <button class="chip" data-cat="week">수업주차</button>
+    <button class="chip" data-cat="material">교안·준비물</button>
+    <button class="chip" data-cat="exam">시험</button>
+    <button class="chip" data-cat="etc">기타</button>
+  </div>
+  <div class="faq-list">
+    <details class="faq-item" data-cat="attend">
+        <summary class="faq-q">
+          <span class="q-badge">출석</span>
+          <span class="q-text">몇 시간 출석해야 이수가 되나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">⏰ <span class="em">8교시(8시간) 전체 출석</span> + 출석시험 응시해야 이수로 인정됩니다.<br>지각·결석·외출·중도퇴실로 8시간을 채우지 못하면 <span class="em">미출석 처리</span>됩니다.</div>
+      </details>
+    <details class="faq-item" data-cat="attend">
+        <summary class="faq-q">
+          <span class="q-badge">출석</span>
+          <span class="q-text">결석하면 어떻게 되나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">⛔ 예외 없이 <span class="em">미이수 처리</span>됩니다. 공결 처리는 불가하며(영유아보육법 시행규칙 지침), 다음 기수에 <span class="em">재수강</span>하셔야 합니다.</div>
+      </details>
+    <details class="faq-item" data-cat="schedule">
+        <summary class="faq-q">
+          <span class="q-badge">일정</span>
+          <span class="q-text">신청한 날짜나 교육장을 바꿀 수 있나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">🔒 개강일 이후에는 <span class="em">절대 변경 불가</span>합니다(교육부 보고 사항).</div>
+      </details>
+    <details class="faq-item" data-cat="online">
+        <summary class="faq-q">
+          <span class="q-badge">온라인</span>
+          <span class="q-text">대면수업은 몇 주차이고, 나머지는 어떻게 되나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">전체 15주차 중 3주차 분량이 대면출석수업으로 대체됩니다. 나머지 온라인강의 주차는 온라인으로 수강하셔야 합니다!</div>
+      </details>
+    <details class="faq-item" data-cat="online">
+        <summary class="faq-q">
+          <span class="q-badge">온라인</span>
+          <span class="q-text">온라인강의 예습하기는 안 들어도 되나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">예습하기 주차 온라인강의 수강은 자율적으로 선택해주시기 바랍니다. 예습하기는 온라인 강의를 수강하시더라도 대면출석수업에 참여하시기 전이라면 출석에 반영되지 않을 수 있습니다.</div>
+      </details>
+    <details class="faq-item" data-cat="week">
+        <summary class="faq-q">
+          <span class="q-badge">주차</span>
+          <span class="q-text">제 과목은 몇 주차에 대면수업이 있나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a" style="padding-bottom:0;">
+          <div style="overflow:hidden;border-radius:10px;border:1px solid var(--line);margin-bottom:16px;">
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead><tr style="background:var(--blue);"><th style="color:#fff;padding:10px 12px;text-align:left;">과목명</th><th style="color:#fff;padding:10px 12px;text-align:left;">수업주차</th></tr></thead>
+              <tbody>
+                <tr style="border-top:1px solid var(--line);"><td style="padding:10px 12px;">보육교사론</td><td style="padding:10px 12px;color:var(--blue-dk);font-weight:700;">3, 6, 8주차</td></tr>
+                <tr style="border-top:1px solid var(--line);background:var(--bg);"><td style="padding:10px 12px;">아동과학지도</td><td style="padding:10px 12px;color:var(--blue-dk);font-weight:700;">6, 8, 9주차</td></tr>
+                <tr style="border-top:1px solid var(--line);"><td style="padding:10px 12px;">아동안전관리</td><td style="padding:10px 12px;color:var(--blue-dk);font-weight:700;">2, 13, 14주차</td></tr>
+                <tr style="border-top:1px solid var(--line);background:var(--bg);"><td style="padding:10px 12px;">언어지도</td><td style="padding:10px 12px;color:var(--blue-dk);font-weight:700;">8, 12, 13주차</td></tr>
+                <tr style="border-top:1px solid var(--line);"><td style="padding:10px 12px;">놀이지도</td><td style="padding:10px 12px;color:var(--blue-dk);font-weight:700;">11, 12, 13주차</td></tr>
+                <tr style="border-top:1px solid var(--line);background:var(--bg);"><td style="padding:10px 12px;">아동미술</td><td style="padding:10px 12px;color:var(--blue-dk);font-weight:700;">6, 8, 13주차</td></tr>
+                <tr style="border-top:1px solid var(--line);"><td style="padding:10px 12px;">아동권리와복지</td><td style="padding:10px 12px;color:var(--blue-dk);font-weight:700;">4, 5, 6주차</td></tr>
+                <tr style="border-top:1px solid var(--line);background:var(--bg);"><td style="padding:10px 12px;">아동관찰및행동연구</td><td style="padding:10px 12px;color:var(--blue-dk);font-weight:700;">5, 6, 8주차</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+    <details class="faq-item" data-cat="material">
+        <summary class="faq-q">
+          <span class="q-badge">준비물</span>
+          <span class="q-text">교안 출력물 없어도 참여할 수 있나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">✅ 네, 문제없습니다. 교육장 스크린으로 PPT를 보며 진행합니다. 단 <span class="em">필기구와 필기노트는 반드시 지참</span>해주세요.</div>
+      </details>
+    <details class="faq-item" data-cat="material">
+        <summary class="faq-q">
+          <span class="q-badge">준비물</span>
+          <span class="q-text">태블릿이나 노트북을 가져가도 되나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">가능합니다. 다만 교육장·일자별로 콘센트나 와이파이 사용이 제한될 수 있으니 미리 다운로드해오시는 게 좋습니다. 시험 중에는 반드시 가방 안에 넣어주세요.</div>
+      </details>
+    <details class="faq-item" data-cat="exam">
+        <summary class="faq-q">
+          <span class="q-badge">시험</span>
+          <span class="q-text">출석시험 점수는 성적에 얼마나 반영되나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">💯 출석시험 배점은 전체 대면출석수업 과목 성적의 <span class="em">10%</span>를 차지합니다. 정확한 배점은 <span class="em">온라인 강의창 상단</span>에서 확인하실 수 있어요.</div>
+      </details>
+    <details class="faq-item" data-cat="exam">
+        <summary class="faq-q">
+          <span class="q-badge">시험</span>
+          <span class="q-text">출석 처리는 언제 되나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">📅 대면출석수업 출결은 <span class="em">교육일 다음 주 정상영업일(보통 월요일)</span>에 처리됩니다. 처리까지 다소 시간이 소요될 수 있으니 바로 반영되지 않아도 기다려 주세요.</div>
+      </details>
+    <details class="faq-item" data-cat="exam">
+        <summary class="faq-q">
+          <span class="q-badge">시험</span>
+          <span class="q-text">시험 난이도는 어떤가요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">📖 수업을 충실히 들으셨다면 <span class="em">좋은 성적을 내실 수 있는 수준</span>입니다. 단, 시험 내용(문제·정답 등)에 대한 개별 안내는 불가합니다.</div>
+      </details>
+    <details class="faq-item" data-cat="exam">
+        <summary class="faq-q">
+          <span class="q-badge">시험</span>
+          <span class="q-text">출석시험은 어떻게 진행되나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">8교시 수업이 모두 끝난 후 O/X 10문제로 진행됩니다. 교안 참고 불가(오픈북 금지), 기존 교안 범위에서만 출제됩니다. 📝 <span class="em">필수 응시</span>이며 미응시 시 <span class="em">미이수</span> 처리됩니다.</div>
+      </details>
+    <details class="faq-item" data-cat="exam">
+        <summary class="faq-q">
+          <span class="q-badge">시험</span>
+          <span class="q-text">시험 점수가 낮으면 미이수인가요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">아닙니다. 점수 자체는 이수 여부에 영향을 주지 않습니다. 중요한 것은 <span class="em">응시 여부</span>입니다. 단 한 번이라도 미응시하면 해당 과목은 <span class="em">미이수</span> 처리됩니다.</div>
+      </details>
+    <details class="faq-item" data-cat="exam">
+        <summary class="faq-q">
+          <span class="q-badge">시험</span>
+          <span class="q-text">시험 중 교안이나 노트를 봐도 되나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">⛔ 안 됩니다. 교안·노트·태블릿·노트북 등 <span class="em">일체의 참고자료 사용 금지</span>입니다. 시험 시작 전 모든 자료는 가방 안에 넣어주세요.</div>
+      </details>
+    <details class="faq-item" data-cat="exam">
+        <summary class="faq-q">
+          <span class="q-badge">시험</span>
+          <span class="q-text">시험 결과는 언제 확인하나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">최종 성적공개일에 확인하실 수 있습니다. 수업 당일에는 개별 점수를 안내드리지 않습니다.</div>
+      </details>
+    <details class="faq-item" data-cat="etc">
+        <summary class="faq-q">
+          <span class="q-badge">기타</span>
+          <span class="q-text">참석 못 할 때는 어디에 연락하나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">학습지원센터 학습상담 게시글, 대표번호 1600-2772, 또는 담당자에게 미리 연락 부탁드립니다.</div>
+      </details>
+    <details class="faq-item" data-cat="etc">
+        <summary class="faq-q">
+          <span class="q-badge">기타</span>
+          <span class="q-text">교육장에 주차할 수 있나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">🚗 주차 및 주차비 지원이 <span class="em">불가</span>합니다. 방문 전 교육장 인근 주차장을 미리 확인해주세요.</div>
+      </details>
+    <details class="faq-item" data-cat="etc">
+        <summary class="faq-q">
+          <span class="q-badge">기타</span>
+          <span class="q-text">핸드폰 충전기나 콘센트를 제공해주나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">스마트폰 충전기는 제공해드리지 않으니 개별적으로 준비해주셔야 합니다. 콘센트는 교육장마다 상황이 달라 자리가 많지 않거나 없을 수 있습니다. 수업 전 미리 충전해오시길 권장드립니다.</div>
+      </details>
+    <details class="faq-item" data-cat="etc">
+        <summary class="faq-q">
+          <span class="q-badge">기타</span>
+          <span class="q-text">음료나 다과가 제공되나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">별도의 다과는 제공되지 않습니다. 교육장 내 정수기가 비치되어 있으니 텀블러를 지참해주시면 편리하게 이용하실 수 있어요.</div>
+      </details>
+    <details class="faq-item" data-cat="etc">
+        <summary class="faq-q">
+          <span class="q-badge">기타</span>
+          <span class="q-text">점심시간에 도시락을 먹을 수 있나요?</span>
+          <span class="q-arrow">▾</span>
+        </summary>
+        <div class="faq-a">교육장 사정에 따라 실내에서 도시락을 드실 수 없는 경우가 있습니다. 인근 식당을 미리 확인해두시는 것을 권장드려요.</div>
+      </details>
+  </div>
+</div>
+
+<!-- 문의 -->
+<div class="page" id="page-contact">
+  <div class="sub-bar">
+    <button class="sub-back" onclick="goHome()">← 처음으로</button>
+    <span class="sub-divider">|</span>
+    <button class="sub-nav" onclick="goPage('page-venue')">교육장</button>
+    <button class="sub-nav" onclick="goPage('page-schedule')">수업 전 필독</button>
+    <button class="sub-nav" onclick="goPage('page-exam')">출석시험</button>
+    <button class="sub-nav" onclick="goPage('page-faq')">자주 묻는 질문</button>
+  </div>
+  <div class="sub-hero">
+    <div class="eyebrow">📞 문의사항</div>
+    <h2>궁금한 점이 있으세요?</h2>
+    <p>아래 방법으로 연락해주세요</p>
+  </div>
+  <div class="content">
+    <div class="contact-warn">📢 <strong>당일 조교 연락처</strong>는 교육일이 있는 주 <strong>금요일</strong>에 문자로 안내됩니다.<br>문자를 못 받은 경우 <strong>교육원으로 바로 연락</strong>해주세요!</div>
+    <div class="contact-card">
+      <div class="c-label">응답 가능 시간</div>
+      <div class="c-value">평일 오전 9시 ~ 오후 5시</div>
+      <div class="c-sub">금요일은 오후 4시까지</div>
+    </div>
+    <a class="contact-row" href="https://m.iubion.com" target="_blank" rel="noopener"><span class="c-icon">🌐</span><span class="c-text">유비온 원격평생교육원 홈페이지</span><span class="c-arr">›</span></a>
+    <a class="contact-row" href="https://m.iubion.com" target="_blank" rel="noopener"><span class="c-icon">📝</span><span class="c-text" style="font-size:14px;">홈페이지 › 학습지원센터 › 학습상담<br><span style="font-size:12px;color:var(--ink2);font-weight:400;">"상담신청" 클릭</span></span><span class="c-arr">›</span></a>
+    <a class="contact-row" href="http://pf.kakao.com/_xdzKgl/chat" target="_blank" rel="noopener"><span class="c-icon">💬</span><span class="c-text">카카오톡 채팅 문의</span><span class="c-arr">›</span></a>
+    <div class="email-section">
+      <div class="email-top">
+        <span class="email-addr">✉️ practice@ubion.co.kr</span>
+        <button class="email-copy-btn" onclick="copyEmail(this)">복사</button>
+      </div>
+      <div class="email-btns">
+        <a class="email-btn" href="https://mail.naver.com/write?to=practice@ubion.co.kr&subject=대면출석수업%20문의" target="_blank" rel="noopener"><span class="email-logo">N</span>네이버</a>
+        <a class="email-btn" href="https://mail.google.com/mail/?view=cm&to=practice@ubion.co.kr&su=대면출석수업%20문의" target="_blank" rel="noopener"><span class="email-logo g">G</span>구글</a>
+        <a class="email-btn" href="https://mail.daum.net/write?to=practice@ubion.co.kr&subject=대면출석수업%20문의" target="_blank" rel="noopener"><span class="email-logo d">D</span>다음</a>
+      </div>
+    </div>
+    <a class="contact-row" href="tel:16002772"><span class="c-icon">📞</span><span class="c-text">전화 문의 · 1600-2772</span><span class="c-arr">›</span></a>
+  </div>
+</div>
+
+</div>
+<script>
+const VENUE_KEY = 'ubion_venue_v8';
+
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  history.pushState({page:id}, '', '#'+id.replace('page-',''));
+  window.scrollTo({top:0, behavior:'instant'});
+}
+function goHome() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-home').classList.add('active');
+  history.pushState({page:'page-home'}, '', ' ');
+  window.scrollTo({top:0, behavior:'instant'});
+}
+// 뒤로가기: GitHub 배포 시 작동
+window.addEventListener('popstate', e => {
+  const id = (e.state && e.state.page) || 'page-home';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'instant'});
+});
+
+const venueNames = {'구로':'본사 지하 세미나실','강북':'정화예술대학교 외식산업관','인천':'건설기술교육원','수원':'수원뷰티실용전문학교','대전':'대전우송정보대학교 동캠퍼스','광주':'한국예술종합교육원','대구':'계명문화대학교 평생교육원','부산':'화신사이버대학교 평생교육원'};
+const venueAddr = {'구로':['서울 구로구 디지털로 34길 27 대륭포스트타워 3차 지하1층','지하 세미나실','https://map.naver.com/p/search/서울특별시%20구로구%20디지털로34길%2027%20대륭포스트타워3차','https://map.kakao.com/?q=서울특별시%20구로구%20디지털로34길%2027%20대륭포스트타워3차'],'강북':['서울 중구 소공로3길 26','106호 강의실','https://map.naver.com/p/search/서울%20중구%20소공로3길%2026','https://map.kakao.com/?q=서울%20중구%20소공로3길%2026'],'인천':['인천 남동구 소래로 688 건설기술교육원 별관','1층 6호관','https://map.naver.com/p/search/인천광역시%20남동구%20소래로%20688','https://map.kakao.com/?q=인천광역시%20남동구%20소래로%20688'],'수원':['경기도 수원시 영통구 반달로7번길 16','3층 강의실','https://map.naver.com/p/search/경기도%20수원시%20영통구%20반달로7번길%2016','https://map.kakao.com/?q=경기도%20수원시%20영통구%20반달로7번길%2016'],'대전':['대전 동구 백룡로 59 동캠퍼스','추후 안내','https://map.naver.com/p/search/대전광역시%20동구%20백룡로%2059','https://map.kakao.com/?q=대전광역시%20동구%20백룡로%2059'],'광주':['광주 동구 서석로 89','4층 강의실','https://map.naver.com/p/search/광주광역시%20동구%20서석로%2089','https://map.kakao.com/?q=광주광역시%20동구%20서석로%2089'],'대구':['대구 달서구 달서대로 675','보건관 또는 쇠턱관 강의실','https://map.naver.com/p/search/대구광역시%20달서구%20달서대로%20675','https://map.kakao.com/?q=대구광역시%20달서구%20달서대로%20675'],'부산':['부산 연제구 고분로191번길 1','3층 다목적홀','https://map.naver.com/p/search/부산광역시%20연제구%20고분로191번길%201','https://map.kakao.com/?q=부산광역시%20연제구%20고분로191번길%201']};
+
+function selectVenue(venue) {
+  try { localStorage.setItem(VENUE_KEY, venue); } catch(e) {}
+  showVenueDetail(venue);
+}
+function showVenueDetail(venue) {
+  document.getElementById('venue-picker').style.display = 'none';
+  const d = venueAddr[venue];
+  document.getElementById('my-venue-card').innerHTML =
+    '<div class="venue-card-head"><span class="region-pill">'+venue+'</span><span style="font-size:15px;font-weight:800;flex:1;margin-left:8px;">'+venueNames[venue]+'</span><span class="my-label">내 교육장</span></div>' +
+    '<div class="venue-card-body" style="display:block;">'+d[0]+'<br>강의실 : <strong>'+d[1]+'</strong>' +
+    '<div class="map-btns"><a class="map-btn" href="'+d[2]+'" target="_blank" rel="noopener">🗺️ 네이버지도</a><a class="map-btn kakao" href="'+d[3]+'" target="_blank" rel="noopener">🟡 카카오맵</a></div></div>';
+  const det = document.getElementById('venue-detail');
+  det.style.display = 'flex';
+  det.style.flexDirection = 'column';
+  det.style.gap = '12px';
+}
+function resetVenue() {
+  try { localStorage.removeItem(VENUE_KEY); } catch(e) {}
+  document.getElementById('venue-picker').style.display = 'flex';
+  document.getElementById('venue-detail').style.display = 'none';
+}
+(function() { try { const s = localStorage.getItem(VENUE_KEY); if(s) showVenueDetail(s); } catch(e) {} })();
+
+function filterFaq(keyword) {
+  const kw = keyword.trim();
+  const items = document.querySelectorAll('#page-faq .faq-item');
+  const clearBtn = document.getElementById('faqClearBtn');
+  const empty = document.getElementById('faqEmpty');
+  const chips = document.getElementById('faqChips');
+  clearBtn.style.display = kw ? 'block' : 'none';
+  chips.style.display = kw ? 'none' : 'flex';
+  let found = 0;
+  items.forEach(item => {
+    const qEl = item.querySelector('.q-text');
+    const aEl = item.querySelector('.faq-a');
+    if (!qEl || !aEl) return;
+    if (!qEl.dataset.orig) qEl.dataset.orig = qEl.textContent.trim();
+    const hasTable = aEl.querySelector('table');
+    if (!aEl.dataset.orig) { aEl.dataset.orig = hasTable ? aEl.innerHTML : aEl.textContent.trim(); aEl.dataset.hasTable = hasTable ? '1' : '0'; }
+    const qOrig = qEl.dataset.orig, aOrig = aEl.dataset.orig, isTable = aEl.dataset.hasTable === '1';
+    if (!kw) { item.classList.remove('hidden'); item.removeAttribute('open'); qEl.textContent = qOrig; isTable ? aEl.innerHTML = aOrig : aEl.textContent = aOrig; return; }
+    const searchText = isTable ? qOrig : (qOrig + ' ' + aOrig);
+    if (searchText.includes(kw)) {
+      item.classList.remove('hidden'); item.setAttribute('open','');
+      const esc = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const hl = t => t.replace(new RegExp(esc,'g'),'<mark class="highlight">'+kw+'</mark>');
+      qEl.innerHTML = hl(qOrig);
+      if (!isTable) aEl.innerHTML = hl(aOrig); else aEl.innerHTML = aOrig;
+      found++;
+    } else { item.classList.add('hidden'); item.removeAttribute('open'); qEl.textContent = qOrig; isTable ? aEl.innerHTML = aOrig : aEl.textContent = aOrig; }
+  });
+  empty.style.display = (kw && found === 0) ? 'block' : 'none';
+}
+function clearFaq() { const i = document.getElementById('faqSearchInput'); i.value=''; filterFaq(''); i.focus(); }
+document.querySelectorAll('#faqChips .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#faqChips .chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const cat = chip.dataset.cat;
+    document.querySelectorAll('#page-faq .faq-item').forEach(item => {
+      item.classList.toggle('hidden', cat !== 'all' && item.dataset.cat !== cat);
+    });
+  });
+});
+function copyEmail(btn) {
+  navigator.clipboard.writeText('practice@ubion.co.kr').then(() => {
+    btn.textContent = '복사됨 ✓'; btn.style.background = 'var(--navy)'; btn.style.color = '#fff';
+    setTimeout(() => { btn.textContent = '복사'; btn.style.background=''; btn.style.color=''; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
